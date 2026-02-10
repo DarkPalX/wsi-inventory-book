@@ -1,0 +1,58 @@
+@extends('theme.layouts.report')
+
+@section('pagecss')
+@endsection
+
+@section('content')
+    <div class="wrapper p-5">
+        
+        <div class="row">
+
+            <div class="col-md-6">
+                <h4 class="text-uppercase">{{ $page->name }}</h4>
+            </div>
+            
+        </div>
+        
+        <div class="row mt-5">
+
+            <div class="table-responsive-faker">
+                <table id="example" class="table table-hover" cellspacing="0" width="100%">
+                    <thead class="table-secondary">
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($transactions as $transaction)
+                            <tr id="row{{$transaction->id}}">
+                                <td><strong @if($transaction->trashed()) style="text-decoration:line-through;" @endif>{{ $transaction->name }}</strong></td>
+                                <td>{{ $transaction->email }}</td>
+                                <td><span class="badge bg-facebook">{{ User::userRole($transaction->role_id) }}</span></td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td class="text-center text-danger p-5" colspan="100%">No item available</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+                
+                <div class="row">
+                    <div class="col-md-12">
+                        {{ $transactions->onEachSide(1)->links('pagination::bootstrap-5') }}
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+@endsection
+
+@section('pagejs')
+@endsection
