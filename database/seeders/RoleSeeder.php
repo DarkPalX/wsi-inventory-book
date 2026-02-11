@@ -17,5 +17,11 @@ class RoleSeeder extends Seeder
             'description' => 'Administrator of the system',
             'created_by' => 1
         ]);
+
+        \App\Models\Role::create([
+            'name' => 'Guest',
+            'description' => 'Views and tests the system',
+            'created_by' => 1
+        ]);
     }
 }

@@ -28,6 +28,7 @@ Route::post('/submit_registration', [FrontController::class, 'submit_registratio
 Route::group(['middleware' => 'admin'], function (){
 
     Route::get('/', [FrontController::class, 'home'])->name('home');
+    Route::get('/home', [FrontController::class, 'home'])->name('home');
     Route::get('/privacy-policy/', [FrontController::class, 'privacy_policy'])->name('privacy-policy');
     Route::post('/contact-us', [FrontController::class, 'contact_us'])->name('contact-us');
     Route::get('/search', [FrontController::class, 'search'])->name('search');
