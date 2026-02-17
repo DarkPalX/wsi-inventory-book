@@ -116,7 +116,14 @@
 
 @section('content')
 
-    <!-- Cover Banner -->
+    {{-- For Auto Login Cover --}}
+    <div class="@if(request('guest_email')) d-flex @endif justify-content-center align-items-center" style="min-height: 100vh; @if(!request('guest_email')) display:none; @endif">
+        <div class="text-center">
+            Logging in ...
+        </div>
+    </div>
+
+    {{-- Cover Banner --}}
     <div id="cover-banner" @if($errors->first('email')) hidden @endif>
 
         <img src="{{ asset('images/company-logo.png') }}" alt="Site Logo" style="max-width: 490px; margin: 20px 0;">
@@ -130,6 +137,7 @@
         </div>
     </div>
 
+    {{-- Main Login --}}
     <div class="content-wrap py-0">
 
         {{-- <div class="section p-0 m-0 h-100 position-absolute" id="blurred-bg"></div> --}}
@@ -159,7 +167,7 @@
                                     <input required type="password" id="password" name="password" class="form-control" placeholder="********" value="{{ request('guest_email') ? 'password' : '' }}">
                                     <small class="text-danger" style="font-size: 12px;">{{ $errors->first('password') }}</small>
                                 </div>
-                                <button type="submit" class="btn btn-md text-white" style="background-color:#fe6400;">Log In</button>
+                                <button id="loginBtn" type="submit" class="btn btn-md text-white" style="background-color:#fe6400;">Log In</button>
                                 <a href="{{route('password.request')}}" class="btn btn-outline-dark btn-md">Forgot Password</a>
                             </form>
 
@@ -176,4 +184,11 @@
 @endsection
 
 @section('pagejs')
+    @if(request('guest_email'))
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                document.getElementById("loginBtn").click();
+            });
+        </script>
+    @endif
 @endsection
