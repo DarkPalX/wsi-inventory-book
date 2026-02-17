@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
+use Illuminate\Validation\ValidationException;
 
 use Facades\App\Helpers\ListingHelper;
 

@@ -257,6 +257,37 @@
                     </div>
                 </div>
 
+                <hr>
+
+                <div class="row mb-2">
+                    <div class="col-md-6 mb-2">
+                        <div class="card border-0 shadow h-100">
+                            <div class="card-header">
+                                <strong><small>Issuance vs Receiving (Monthly)</small></strong>
+                            </div>
+                            <div class="card-body">
+                                <div style="height:260px">
+                                    <canvas id="trendChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-2">
+                        <div class="card border-0 shadow h-100">
+                            <div class="card-header">
+                                <strong><small>Recent Transactions Volume</small></strong>
+                            </div>
+                            <div class="card-body">
+                                <div style="height:260px">
+                                    <canvas id="volumeChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
                 <div class="row">
                     <div class="col-md-7">
                         <div class="row">
@@ -463,6 +494,83 @@
                     }
                 ]
             });
+        });
+    </script>
+
+	<script src="{{ asset('theme/js/chart-npm.js') }}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            // ===== Prepare monthly counts from PHP collections =====
+            const issuanceDates = [
+                @foreach($issuance_transactions as $t)
+                    "{{ \Carbon\Carbon::parse($t->date_received)->format('Y-m') }}",
+                @endforeach
+            ];
+
+            const receivingDates = [
+                @foreach($receiving_transactions as $t)
+                    "{{ \Carbon\Carbon::parse($t->date_received)->format('Y-m') }}",
+                @endforeach
+            ];
+
+            function groupCounts(arr){
+                const map = {};
+                arr.forEach(m => map[m] = (map[m]||0)+1);
+                return map;
+            }
+
+            const issuanceMap = groupCounts(issuanceDates);
+            const receivingMap = groupCounts(receivingDates);
+
+            const months = [...new Set([...issuanceDates, ...receivingDates])].sort();
+
+            const issuanceData = months.map(m => issuanceMap[m] || 0);
+            const receivingData = months.map(m => receivingMap[m] || 0);
+
+            // ===== Trend Chart =====
+            new Chart(document.getElementById('trendChart'), {
+                type: 'line',
+                data: {
+                    labels: months,
+                    datasets: [
+                        {
+                            label: 'Issuance',
+                            data: issuanceData,
+                            borderWidth: 2,
+                            tension: 0.3
+                        },
+                        {
+                            label: 'Receiving',
+                            data: receivingData,
+                            borderWidth: 2,
+                            tension: 0.3
+                        }
+                    ]
+                },
+                options: {
+                    maintainAspectRatio:false,
+                    responsive:true
+                }
+            });
+
+            // ===== Volume Pie =====
+            new Chart(document.getElementById('volumeChart'), {
+                type: 'pie',
+                data: {
+                    labels: ['Issuance','Receiving'],
+                    datasets: [{
+                        data: [
+                            issuanceDates.length,
+                            receivingDates.length
+                        ]
+                    }]
+                },
+                options:{
+                    maintainAspectRatio:false
+                }
+            });
+
         });
     </script>
 @endsection

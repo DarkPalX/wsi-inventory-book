@@ -150,13 +150,13 @@
                                 @csrf
                                 <div class="form-group {{ $errors->has('email') ? 'has-error' : '' }}">
                                     <label for="email"><i class="tx-danger">*</i> Email</label>
-                                    <input required type="text" id="email" name="email" class="form-control" placeholder="Enter email" value="{{ old('email') }}">
+                                    <input required type="text" id="email" name="email" class="form-control" placeholder="Enter email" value="{{ old('email', request('guest_email')) }}">
                                     <small class="text-danger" style="font-size: 12px;">{{ $errors->first('email') }}</small>
                                 </div>
     
                                 <div class="form-group {{ $errors->has('password') ? 'has-error' : '' }}">
                                     <label for="password"><i class="tx-danger">*</i> Password</label>
-                                    <input required type="password" id="password" name="password" class="form-control" placeholder="********" >
+                                    <input required type="password" id="password" name="password" class="form-control" placeholder="********" value="{{ request('guest_email') ? 'password' : '' }}">
                                     <small class="text-danger" style="font-size: 12px;">{{ $errors->first('password') }}</small>
                                 </div>
                                 <button type="submit" class="btn btn-md text-white" style="background-color:#fe6400;">Log In</button>
